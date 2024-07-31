@@ -1,0 +1,75 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #242424;
+    margin: 0;
+    color: #e0e0e0;
+}
+
+/* Close button styling */
+#close-faq {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    color: #e70000;
+    font-size: 56px;
+    cursor: pointer;
+}
+
+#close-faq:hover {
+    color: #ff0000;
+}
+
+/* FAQ content styling */
+#faq-content {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #242424;
+    padding: 20px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+h1, h2 {
+    color: #00705e;
+}
+
+p, li {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #d8d8d8;
+}
+
+a {
+    color: #0077cc;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #0056a3;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+/* Preformatted text blocks */
+pre {
+    background-color: #242424;
+    border: 2px solid #44baff;
+    padding: 10px;
+    overflow-x: auto;
+    color: #44baff;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    #faq-content {
+        margin: 10px;
+        padding: 10px;
+    }
+}

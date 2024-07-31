@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schema Editor</title>
+    <link rel="icon" type="image/png" href="/stellaStarTiny.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.7.0/jsoneditor.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.7.0/jsoneditor.min.js"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+
+
+<div id="start-screen" class="start-screen">
+    <h1 style="color: #f5f5f5;">Welcome to the JSON Schema Editor</h1>
+    <h2 style="color: #f5f5f5;">Please select an option to begin:</h2>
+    <input type="file" id="hiddenFileInput" style="display: none;" accept=".json" onchange="handleFileSelect(event)">
+    <button id="loadSchemaBtn" style="margin-bottom: 10px;" onclick="document.getElementById('hiddenFileInput').click();">Load Schema</button>
+    <button id="newSchemaBtn">Start New Schema</button>
+</div>
+
+<div id="faq-placeholder" class="faq-placeholder" style="display:none;">
+    <iframe src="faq.html" style="width:100%; height:100%; border:none;"></iframe>
+</div>
+
+
+
+
+<body>
+    <div id="search-widget">
+        <button id="search-icon" onclick="toggleSearchBar()">🔍</button>
+        <input type="text" id="search-input" placeholder="Search for tables..." style="display: none;"/>
+        <div id="search-results" class="search-results"></div>
+    </div>
+    
+    
+    
+    <div class="hamburger-menu">
+        <button onclick="toggleMenu()">☰</button>
+        <div class="menu-content" style="display:none;">
+            <button onclick="saveSchema()">Save Schema</button>
+            <button onclick="addNode()">Add Node</button>
+            <button onclick="showFAQ()">Display FAQ</button>
+            <div class="dropdown">
+                <button class="dropbtn" onclick="toggleDropdown()">Toggle Windows</button>
+                <div class="dropdown-content" style="display:none;">
+                    <div class="toggle-switch">
+                         <label class="switch" style="margin-right: 10px;">
+                            <input type="checkbox" onchange="toggleVisibility('jsoneditor')" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        JSON Editor
+                    </div>
+                    <div class="toggle-switch">
+                         <label class="switch" style="margin-right: 10px;">
+                            <input type="checkbox" onchange="toggleVisibility('diagram_window')" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        Diagram
+                    </div>
+                    <div class="toggle-switch">
+                         <label class="switch" style="margin-right: 10px;">
+                            <input type="checkbox" onchange="toggleVisibility('node_detail_window')" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        Node Details
+                    </div>
+                    <div class="toggle-switch">
+                         <label class="switch" style="margin-right: 10px;">
+                            <input type="checkbox" onchange="toggleVisibility('table_type_window')" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        Table Types
+                    </div>
+                    <div class="toggle-switch">
+                         <label class="switch" style="margin-right: 10px;">
+                            <input type="checkbox" onchange="toggleVisibility('column_type_window')" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        Column Types
+                    </div>
+                    <div class="toggle-switch">
+                         <label class="switch" style="margin-right: 10px;">
+                            <input type="checkbox" onchange="toggleVisibility('property_type_window')" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        Property Types
+                    </div>
+                    <div class="toggle-switch">
+                         <label class="switch" style="margin-right: 10px;">
+                            <input type="checkbox" onchange="toggleVisibility('relationship_type_window')" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        Relationship Types
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+
+
+
+    <div id="jsoneditor" class="window" style="width: 600px; height: 400px;">
+        <div class="editor-header">
+            JSON Editor
+            <div class="z-axis-controls">
+                <button class="z-axis-btn" onclick="shiftZIndex('jsoneditor', 1)">&#9650;</button>
+                <button class="z-axis-btn" onclick="shiftZIndex('jsoneditor', -1)">&#9660;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diagram Window -->
+    <div id="diagram_window" class="window">
+        <div class="window-header">
+            Diagram
+            <button onclick="addNode()">Add Node</button>
+            <div class="z-axis-controls">
+                <button class="z-axis-btn" onclick="shiftZIndex('diagram_window', 1)">&#9650;</button>
+                <button class="z-axis-btn" onclick="shiftZIndex('diagram_window', -1)">&#9660;</button>
+            </div>
+            
+        </div>
+        <div id="network" style="height: calc(100% - 30px);"></div>
+    </div>
+
+
+    <!-- Node Details Window -->
+    <div id="node_detail_window" class="window">
+        <div class="window-header">
+            <div>
+                Node Details
+            </div>
+            <div>
+                <input id="node-name" class="table-name" placeholder="Node Name"
+                    onchange="updateTableName(this.value)" />
+                <input id="node-description" class="table-desc" placeholder="Description"
+                    onchange="updateTableDescription(this.value)" />
+                <select id="node-type" onchange="updateTableTypeForNode(this.value)"></select>
+            </div>
+            <div class="z-axis-controls">
+                <button class="z-axis-btn" onclick="shiftZIndex('node_detail_window', 1)">&#9650;</button>
+                <button class="z-axis-btn" onclick="shiftZIndex('node_detail_window', -1)">&#9660;</button>
+            </div>
+
+            <button id="deleteNodeBtn" class="delete-btn" style="display:none;"
+                onclick="deleteNode(selectedNodeId)">Delete Node</button>
+        </div>
+        <table id="node-details-table">
+            <thead>
+                <tr>
+                    <th>Field Name</th>
+                    <th>Description</th>
+                    <th>Data Type</th>
+                    <th>Properties</th>
+                    <th>Relationships</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="node-details-body">
+                <!-- Dynamic rows will be inserted here -->
+            </tbody>
+        </table>
+        <button onclick="addColumn()">Add Column</button>
+    </div>
+
+    <!-- Table Types Window -->
+    <div id="table_type_window" class="window">
+        <div class="window-header">
+            Table Types
+            <div class="z-axis-controls">
+                <button class="z-axis-btn" onclick="shiftZIndex('table_type_window', 1)">&#9650;</button>
+                <button class="z-axis-btn" onclick="shiftZIndex('table_type_window', -1)">&#9660;</button>
+            </div>
+        </div>
+
+
+        <div id="tableTypesContent">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Color</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableTypeBody">
+                    <!-- Rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <button id="addTableTypeBtn" onclick="addTableType()">Add Table Type</button>
+    </div>
+
+
+    <!-- Column Types Window -->
+    <div id="column_type_window" class="window">
+        <div class="window-header">
+            Column Types
+            <div class="z-axis-controls">
+                <button class="z-axis-btn" onclick="shiftZIndex('column_type_window', 1)">&#9650;</button>
+                <button class="z-axis-btn" onclick="shiftZIndex('column_type_window', -1)">&#9660;</button>
+            </div>
+        </div>
+
+
+        <div id="columnTypesContent">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="columnTypeBody">
+                    <!-- Rows with editable fields will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <button id="addColumnTypeBtn" onclick="addColumnType()">Add Column Type</button>
+    </div>
+
+
+    <!-- Property Type Window -->
+    <div id="property_type_window" class="window">
+        <div class="window-header">
+            Property Types
+            <div class="z-axis-controls">
+                <button class="z-axis-btn" onclick="shiftZIndex('property_type_window', 1)">&#9650;</button>
+                <button class="z-axis-btn" onclick="shiftZIndex('property_type_window', -1)">&#9660;</button>
+            </div>
+        </div>
+
+
+        <div id="propertyTypesContent">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="propertyTypeBody">
+                    <!-- Rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <button id="addPropertyTypeBtn" onclick="addPropertyType()">Add Property Type</button>
+    </div>
+
+    <!-- Relation Type Window -->
+    <div id="relationship_type_window" class="window">
+        <div class="window-header">
+            Relationship Types
+            <div class="z-axis-controls">
+                <button class="z-axis-btn" onclick="shiftZIndex('relationship_type_window', 1)">&#9650;</button>
+                <button class="z-axis-btn" onclick="shiftZIndex('relationship_type_window', -1)">&#9660;</button>
+            </div>
+
+        </div>
+
+
+        <div id="relationshipTypesContent">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="relationshipTypeBody">
+                    <!-- Rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <button id="addRelationshipTypeBtn" onclick="addRelationshipType()">Add Relation Type</button>
+    </div>
+
+
+
+
+    <script src="./scripts/main.js" defer></script>
+    <script src="./scripts/controls.js" defer></script>
+    <script src="./scripts/relationshipTypes.js" defer></script>
+    <script src="./scripts/propertyTypes.js" defer></script>
+    <script src="./scripts/columnTypes.js" defer></script>
+    <script src="./scripts/tableTypes.js" defer></script>
+    <script src="./scripts/nodeDetails.js" defer></script>
+
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - JSON Schema Editor</title>
+    <link rel="stylesheet" href="faq.css">
+</head>
+<body>
+    <button id="close-faq" onclick="parent.showFAQ()">X</button>
+
+
+    <div id="faq-content">
+        <h1>FAQ - JSON Schema Editor</h1>
+        <h2>What is the JSON Schema Editor?</h2>
+        <p>The JSON Schema Editor is a web-based tool developed by Stella Technologies, designed to facilitate the visualization, creation, and editing of JSON-based schemas, specifically tailored for the <a href="https://github.com/stellatechnologies/CyberDataSchema">Cyber Data Schema</a>. It provides a user-friendly interface to interact with complex data structures, supporting the management and linkage of various data types within an intuitive graphical environment.</p>
+
+        <br>
+        
+        <h2>How is the JSON Schema Editor Designed to Work with the Cyber Data Schema?</h2>
+        <p>This editor is specifically optimized to handle the unique elements and relationships defined within the Cyber Data Schema. It allows users to:</p>
+        <ul>
+            <li>Import schemas in a predefined JSON format.</li>
+            <li>Create new tables, columns, and relationships visually.</li>
+            <li>Edit details such as names, descriptions, and types directly through interactive forms.</li>
+            <li>Position tables within a visual space to map out relationships and data flow effectively.</li>
+        </ul>
+
+        <br>
+
+        <h2>What Format Do Schemas Need to Be in for Importing?</h2>
+        <p>To import data into the JSON Schema Editor, schemas need to be structured in the following JSON format:</p>
+        <pre>{
+            "version": "version of the cyber data schema",
+            "release_date": "date of the release",
+            "commentary": "commentary about the specific release",
+            "tables": [
+                {
+                    "uuid": "uuid of the table",
+                    "name": "name of the table",
+                    "description": "description of the table",
+                    "type": "type of the table",
+                    "pos_x": "x-coordinate position",
+                    "pos_y": "y-coordinate position",
+                    "columns": [
+                        {
+                            "uuid": "uuid of the column",
+                            "name": "name of the column",
+                            "description": "description of the column",
+                            "type": "type of the column",
+                            "relationship": [
+                                {
+                                    "uuid": "uuid of the relationship",
+                                    "type": "type of the relationship",
+                                    "table_uuid": "uuid of the related table",
+                                    "column_uuid": "uuid of the related column",
+                                    "description": "description of the relationship"
+                                }
+                            ],
+                            "properties": [
+                                {
+                                    "uuid": "uuid of the property",
+                                    "type": "type of the property",
+                                    "value": "value of the property"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "table_types": [
+                {
+                    "uuid": "uuid of the table type",
+                    "name": "name of the table type",
+                    "description": "description of the table type",
+                    "color": "color of the table type"
+                }
+            ],
+            "column_types": [
+                {
+                    "uuid": "uuid of the column type",
+                    "name": "name of the column type",
+                    "description": "description of the column type"
+                }
+            ],
+            "relationship_types": [
+                {
+                    "uuid": "uuid of the relationship type",
+                    "name": "name of the relationship type",
+                    "description": "description of the relationship type"
+                }
+            ],
+            "property_types": [
+                {
+                    "uuid": "uuid of the property type",
+                    "name": "name of the property type",
+                    "description": "description of the property type"
+                }
+            ]
+        }
+        </pre>
+
+        <br>
+
+        <h2>Who Develops the JSON Schema Editor?</h2>
+        <p>The JSON Schema Editor is developed by Stella Technologies, a leader in technological innovations and software solutions.
+            This tool is freely available under the GNU General Public License v3 (GPL-3), encouraging modifications and redistribution under the same license terms. While the editor is fully functional and equipped to handle a wide range of schema editing needs, we understand that some organizations may have specific requirements or desire additional features that are not currently supported.</p>
+
+        <p>If you require custom features or tailored solutions to better suit your operational needs, Stella Technologies offers specialized development services. Engage with us to discuss how we can assist in expanding the capabilities of the JSON Schema Editor specifically for your environment. For more information about our services or to discuss potential customizations, please visit us at <a href="https://stellatechnologies.space">StellaTechnologies.space</a>.</p>
+
+
+    </div>
+</body>
+</html>
